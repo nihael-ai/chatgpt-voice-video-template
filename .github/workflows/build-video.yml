@@ -1,0 +1,63 @@
+name: Build video
+
+on:
+  workflow_dispatch:
+    inputs:
+      project:
+        description: "projects/ 以下のプロジェクト名"
+        required: true
+        default: "demo"
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: video-${{ github.ref }}-${{ inputs.project }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Reject unsafe project name
+        shell: bash
+        run: |
+          [[ "${{ inputs.project }}" =~ ^[A-Za-z0-9_-]+$ ]]
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install free local tools
+        run: |
+          pip install -r requirements.txt
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg fonts-noto-cjk
+      - name: Start VOICEVOX Engine (CPU)
+        run: |
+          docker run --rm -d --name voicevox -p 50021:50021 voicevox/voicevox_engine:cpu-ubuntu20.04-latest
+      - name: Validate and build
+        run: |
+          python -m src.validate "projects/${{ inputs.project }}/project.json" --check-tools
+          python -m src.build "projects/${{ inputs.project }}/project.json" --output build
+      - name: Verify outputs
+        run: |
+          test -s build/video.mp4
+          test -s build/video.srt
+          ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1 build/video.mp4
+      - name: Upload MP4, subtitles, and credits
+        uses: actions/upload-artifact@v4
+        with:
+          name: video-${{ inputs.project }}-${{ github.run_number }}
+          path: |
+            build/video.mp4
+            build/video.srt
+            build/CREDITS.txt
+            build/manifest.json
+          retention-days: 3
+          if-no-files-found: error
+
