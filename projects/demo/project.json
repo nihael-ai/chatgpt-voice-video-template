@@ -1,0 +1,47 @@
+{
+  "$schema": "../../project.schema.json",
+  "title": "3つの形で学ぶ、伝わる図解",
+  "video": {"width": 1280, "height": 720, "fps": 30, "background": "#10182b"},
+  "voicevox": {"speaker": 3, "speaker_name": "ずんだもん", "speed_scale": 1.08},
+  "subtitles": {"enabled": true, "burn_in": true},
+  "bgm": {"path": null, "volume": 0.12, "loop": true},
+  "credits": ["VOICEVOX:ずんだもん", "図形・文章: このサンプル用の自作素材"],
+  "scenes": [
+    {
+      "type": "title",
+      "duration": "auto",
+      "title": "伝わる図解のつくり方",
+      "subtitle": "丸・三角・四角だけで試してみよう",
+      "narration": "今回は、丸、三角、四角の三つだけで、伝わる図解を作るコツを紹介します。"
+    },
+    {
+      "type": "diagram",
+      "duration": "auto",
+      "title": "役割を決める",
+      "narration": "丸はアイデア、三角は変化、四角は結論。形ごとに役割を決めると、内容を直感的に追えます。",
+      "shapes": [
+        {"shape": "circle", "x": 250, "y": 360, "size": 190, "color": "#46c2ff", "label": "アイデア"},
+        {"shape": "triangle", "x": 640, "y": 360, "size": 210, "color": "#ffd166", "label": "変化"},
+        {"shape": "rectangle", "x": 1030, "y": 360, "size": 210, "color": "#77dd77", "label": "結論"}
+      ]
+    },
+    {
+      "type": "diagram",
+      "duration": "auto",
+      "title": "情報を一つずつ見せる",
+      "narration": "一画面に詰め込みすぎず、伝えたいことを一つに絞ります。余白も、理解を助ける大切な情報です。",
+      "shapes": [
+        {"shape": "circle", "x": 420, "y": 360, "size": 220, "color": "#46c2ff", "label": "要点"},
+        {"shape": "rectangle", "x": 820, "y": 360, "size": 300, "color": "#77dd77", "label": "十分な余白"}
+      ]
+    },
+    {
+      "type": "title",
+      "duration": "auto",
+      "title": "小さく作って、すぐ確認",
+      "subtitle": "原稿 → 自動生成 → artifactで確認",
+      "narration": "まず短い動画を作り、字幕、音量、テンポを確認しましょう。このテンプレートなら、チャットで原稿を直すたびに同じ手順で再生成できます。"
+    }
+  ]
+}
+
