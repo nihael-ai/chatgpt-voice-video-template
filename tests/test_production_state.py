@@ -21,6 +21,7 @@ class DirectorStateTests(unittest.TestCase):
         init(self.project, "General explainer")
         advance(self.project, "storyboard", evidence="storyboard.md")
         advance(self.project, "preview", evidence="../../build/contact-sheet.png")
+        advance(self.project, "present", message="chat:inline image confirmed by host")
         return advance(self.project, "request-review")
 
     def test_init_resume_no_overwrite(self):
@@ -50,7 +51,7 @@ class DirectorStateTests(unittest.TestCase):
         advance(self.project, "rendered", evidence="../../build/video.mp4")
         result = advance(self.project, "delivered", message="https://example.test/artifacts/test")
         self.assertEqual(result["stage"], "delivered")
-        self.assertEqual(len(result["history"]), 7)
+        self.assertEqual(len(result["history"]), 8)
 
     def test_revision_limit_stops_automatic_loop(self):
         self.to_review()
@@ -59,6 +60,7 @@ class DirectorStateTests(unittest.TestCase):
             if i < MAX_REVISIONS-1:
                 advance(self.project, "storyboard", evidence="storyboard.md")
                 advance(self.project, "preview", evidence="../../build/contact-sheet.png")
+                advance(self.project, "present", message="chat:second preview shown")
                 advance(self.project, "request-review")
         self.assertTrue(state["awaiting_user_decision"])
         with self.assertRaises(StateError):
@@ -79,7 +81,7 @@ class DirectorStateTests(unittest.TestCase):
         self.to_review()
         with self.assertRaises(StateError):
             advance(self.project, "changes")
-        self.assertEqual(load(self.project)["stage"], "awaiting_review")
+        self.assertEqual(load(self.project)["stage"], "awaiting_feedback")
 
 if __name__ == "__main__":
     unittest.main()

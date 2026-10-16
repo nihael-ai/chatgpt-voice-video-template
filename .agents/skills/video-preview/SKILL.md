@@ -62,3 +62,7 @@ PY
 ## Done criteria
 
 VOICEVOXやフルMP4を起動せずに、実装済みシーンの構図が確認でき、未確認点が明示されていること。
+
+## Chat inline handoff
+
+Run `python -m src.chat_preview projects/demo/project.json --output build/chat-preview/demo`. The generated manifest lists actual local image files and their hashes. Attach `contact-sheet.jpg` in the chat UI when supported, do not merely give a GitHub URL. If no chat media bridge exists, state that the preview is generated but not presented and do not change the state to `preview_presented`. More in `docs/INLINE_PREVIEW.md`.

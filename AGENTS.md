@@ -46,3 +46,10 @@
 - 書き出し成功（exit code 0）だけで**品質合格**とは判定しない。人間の視聴確認が必要な項目を明示する。
 - 仕様変更には対応するvalidator・単体テストを加える。未実装機能をREADMEやSkillで「利用可能」と表現しない。
 - 今回のSkillsは制作手順書であり、アニメーションエンジン、キャッシュ、自動映像監査の実装は次フェーズ。
+
+## チャット内プレビューの優先ルール
+
+- ユーザーがチャットで動画制作を依頼した場合、`docs/INLINE_PREVIEW.md`を読み、`python -m src.chat_preview projects/<name>/project.json --output build/chat-preview/<name>`で画像とmanifestを用意する。
+- `contact-sheet.jpg`を会話内に実際に表示してから`present`を記録する。GitHubリンクだけを返した場合は提示済みとしない。
+- `preview_generated` → `preview_presented` → `awaiting_feedback`を順に通り、ユーザーの返答待ちで停止する。
+- GitHubから会話への画像表示を自動実行できない環境では、制約を明示して`preview_generated`のままとする。
