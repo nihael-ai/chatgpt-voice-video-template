@@ -13,6 +13,10 @@ description: Inspect layouts and static representative frames before paid or len
 
 `AGENTS.md` と `VIDEO_STYLE.md` を読み、対象 `project.json` を確認する。PythonとPillowがある環境を使用。VOICEVOX・FFmpeg・GitHub Actionsは不要。
 
+## Implemented command
+
+Run \`python -m src.storyboard projects/demo/project.json --output build/storyboard\`. Outputs \`scene-XX.png\`, \`contact-sheet.jpg\`, and \`report.json\`. Optional \`--strict\` exits with an error for warnings. This implementation requires only Pillow and does not launch VOICEVOX, FFmpeg, or GitHub Actions.
+
 ## Static preview procedure
 
 1. `python -m src.validate projects/demo/project.json` を実行する（対象に合わせパスを変更）。

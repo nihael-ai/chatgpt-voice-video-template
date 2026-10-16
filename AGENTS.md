@@ -20,7 +20,7 @@
 1. 原稿、字幕、シーン構成、素材の権利を確認する。現在の `project.json` スキーマにない要素を勝手に書かない。
 2. `python -m src.validate projects/<name>/project.json` を実行する。
 3. `python -m unittest discover -s tests -v` を実行する。
-4. 必要なら `video-preview` に従い、VOICEVOX・FFmpeg不要の代表静止画を作成する。
+4. 必要なら `python -m src.storyboard projects/<name>/project.json --output build/storyboard` でVOICEVOX・FFmpeg不要の静止画と警告レポートを作成する。
 5. レンダリングが明示的に依頼された場合に限り、費用・所要時間を確認して部分プレビューまたは `python -m src.build ...` を実行する。
 6. 品質監査で未確認事項を明示し、変更は小さなコミットまたはPRにする。
 

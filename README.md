@@ -53,6 +53,19 @@ ChatGPTやCodexに原稿・素材・指示を渡し、`project.json` を更新�
 
 `duration: "auto"` は音声長に合わせます。秒数を指定した場合も、音声が切れないよう必要なら自動延長します。素材パスは `project.json` があるフォルダ内の相対パスだけが許可されます。
 
+
+## 音声・MP4を生成しない静止画レビュー
+
+Pillowだけで構図を確認します。**VOICEVOX・FFmpeg・Docker・GitHub Actionsは起動しません**。まずproject.jsonを検証し、タイトル・図解の静止画、写真素材のcontain/cover配置例、動画クリップの未確認プレースホルダーを生成します。
+
+```bash
+python -m src.storyboard projects/demo/project.json --output build/storyboard
+```
+
+出力は各シーンのPNG、一覧の \`contact-sheet.jpg\`、検査レポート \`report.json\` です。安全余白の推定警告、長いナレーション、画像トリミングの注意、動画クリップの未確認情報を記録します。警告を終了コード1として扱う場合は \`--strict\` を指定します（レポートは保存されます）。
+
+**制限**：動画クリップの実フレーム、最終字幕の見え方と同期、ナレーション音声、アニメーションは未検査です。代表静止画のレイアウト検査は推定値であり、全ての文字の重なりや読みやすさを自動保証するものではありません。完成MP4は内容承認後に \`Build video\` で生成してください。
+
 ## ローカル実行
 
 Python 3.12、FFmpeg、Docker Desktopを用意します。PowerShellの例:
