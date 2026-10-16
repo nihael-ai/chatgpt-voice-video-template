@@ -11,27 +11,27 @@
     {
       "action": "init",
       "stage": "brief",
-      "at": "2026-10-16T07:00:00+00:00"
+      "at": "2026-10-16T08:36:14.822Z"
     },
     {
       "action": "storyboard",
       "from": "brief",
       "stage": "storyboard",
-      "at": "2026-10-16T07:00:00+00:00",
+      "at": "2026-10-16T08:36:14.822Z",
       "file": "projects/moon-distance-30/storyboard.md"
     },
     {
       "action": "preview",
       "from": "storyboard",
       "stage": "preview",
-      "at": "2026-10-16T07:00:00+00:00",
+      "at": "2026-10-16T08:36:14.822Z",
       "file": "projects/moon-distance-30/state_preview.png"
     },
     {
       "action": "request-review",
       "from": "preview",
       "stage": "awaiting_review",
-      "at": "2026-10-16T07:00:00+00:00"
+      "at": "2026-10-16T08:36:14.822Z"
     }
   ]
 }
