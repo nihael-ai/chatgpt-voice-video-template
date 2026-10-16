@@ -10,7 +10,8 @@
 
 1. このファイルと `README.md`、`VIDEO_STYLE.md`
 2. 対象 `projects/<name>/project.json`
-3. 作業内容に応じた以下のAgent Skill（Skill対応エージェントで自動発見されない場合は明示的に読む）：
+3. ユーザーが動画を「会話で作って」「続きを進めて」と依頼したときは、まず `.agents/skills/video-director/SKILL.md` を読み、対話の確認ポイントと制作状態を管理する。技術手順は `docs/CHAT_VIDEO_WORKFLOW.md` を参照。
+4. 作業内容に応じた以下のAgent Skill（Skill対応エージェントで自動発見されない場合は明示的に読む）：
    - 企画・台本・絵コンテ → `.agents/skills/video-planning/SKILL.md`
    - 低コストの静止画確認 → `.agents/skills/video-preview/SKILL.md`
    - 品質監査・完成判定 → `.agents/skills/video-quality-check/SKILL.md`
@@ -23,6 +24,7 @@
 4. 必要なら `python -m src.storyboard projects/<name>/project.json --output build/storyboard` でVOICEVOX・FFmpeg不要の静止画と警告レポートを作成する。
 5. レンダリングが明示的に依頼された場合に限り、費用・所要時間を確認して部分プレビューまたは `python -m src.build ...` を実行する。
 6. 品質監査で未確認事項を明示し、変更は小さなコミットまたはPRにする。
+7. 対話型動画制作では `python -m src.production_state` を使用して段階を保存する。プレビュー提示・ユーザーの承認を飛ばさない。JSONログの `user:` は本人認証ではないため、実行権限側でも本番生成を管理する。
 
 **ユーザーの明示的な依頼がなければフル動画のレンダリングやGitHub ActionsのBuild videoを起動しない。** コード変更にレンダリングを伴わせない。mainへの直接pushや自動mergeも避ける。
 
