@@ -1,0 +1,66 @@
+{
+  "title": "3つの形で、伝わる図解",
+  "notes": "比較実験用の自作コンテンツ。音声合成なし。双方同一の構図、動き、文字。",
+  "video": {
+    "width": 640,
+    "height": 360,
+    "fps": 15,
+    "duration_seconds": 12
+  },
+  "colors": {
+    "background": "#111a2b",
+    "foreground": "#ffffff",
+    "muted": "#bacde7"
+  },
+  "shapes": [
+    {
+      "kind": "circle",
+      "label": "アイデア",
+      "color": "#43c3ff",
+      "x": 155,
+      "y": 194,
+      "size": 92,
+      "appears": 3.3
+    },
+    {
+      "kind": "triangle",
+      "label": "変化",
+      "color": "#ffcd63",
+      "x": 320,
+      "y": 194,
+      "size": 92,
+      "appears": 4.3
+    },
+    {
+      "kind": "square",
+      "label": "結論",
+      "color": "#71df9b",
+      "x": 485,
+      "y": 194,
+      "size": 92,
+      "appears": 5.3
+    }
+  ],
+  "captions": [
+    {
+      "start": 0,
+      "end": 3,
+      "text": "伝わる図解には、コツがあります。"
+    },
+    {
+      "start": 3,
+      "end": 7,
+      "text": "丸・三角・四角に役割を決める。"
+    },
+    {
+      "start": 7,
+      "end": 10,
+      "text": "伝える情報を、一つに絞る。"
+    },
+    {
+      "start": 10,
+      "end": 12,
+      "text": "これだけで見やすくなります。"
+    }
+  ]
+}
