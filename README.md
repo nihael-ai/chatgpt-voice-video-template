@@ -4,6 +4,12 @@ ChatGPTやCodexに原稿・素材・指示を渡し、`project.json` を更新�
 
 生成時に有料AI APIは呼びません。VOICEVOX Engine、Python、FFmpeg、GitHub Actionsの標準runnerだけを使います。ただしGitHub Actionsにはアカウント／リポジトリ種別ごとの無料枠があり、超過時の課金設定は利用者のGitHub設定に依存します。
 
+## チャットから制作を進める（video-director 試作）
+
+動画を作成・再開する際には、[video-director Skill](.agents/skills/video-director/SKILL.md)と[会話型制作の進行手順](docs/CHAT_VIDEO_WORKFLOW.md)を使用できます。制作状態を `projects/<name>/production_state.json` に保存し、台本 → 絵コンテ → 静止画プレビュー → ユーザー確認 → 明示承認 → MP4 の順序で進めます。
+
+コマンド一覧：`python -m src.production_state --help`。この状態CLIは**動画そのものを作りません**。コード実行可能なWork/Codex等の環境と適切な権限が必要です。追加料金のかかるAPIは使用しません。
+
 ## できること
 
 - `title`: 見出しと副見出し
