@@ -1,0 +1,132 @@
+{
+  "$schema": "../../project.schema.json",
+  "title": "月は地球から遠ざかっている｜30秒雑学",
+  "video": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30,
+    "background": "#111a2c"
+  },
+  "voicevox": {
+    "speaker": 3,
+    "speaker_name": "ずんだもん",
+    "speed_scale": 1.15
+  },
+  "subtitles": {
+    "enabled": true,
+    "burn_in": true
+  },
+  "bgm": {
+    "path": null,
+    "volume": 0.1,
+    "loop": true
+  },
+  "credits": [
+    "VOICEVOX:ずんだもん",
+    "参考: NASA / JPL 月面レーザー測距 (https://www.nasa.gov/missions/lro/laser-beams-reflected-between-earth-and-moon-boost-science/)",
+    "イラスト・図: 自作（模式図、縮尺は正確ではありません）"
+  ],
+  "scenes": [
+    {
+      "type": "title",
+      "title": "月が遠ざかる？",
+      "subtitle": "地球と月の、意外な関係",
+      "narration": "月は今も、地球から離れています。",
+      "duration": 4
+    },
+    {
+      "type": "diagram",
+      "title": "1年に約3.8センチ",
+      "narration": "その速さは、1年に約3.8センチ。",
+      "duration": 5,
+      "shapes": [
+        {
+          "shape": "circle",
+          "x": 300,
+          "y": 945,
+          "size": 340,
+          "color": "#398cda",
+          "label": "地球"
+        },
+        {
+          "shape": "circle",
+          "x": 775,
+          "y": 945,
+          "size": 225,
+          "color": "#c3c9d6",
+          "label": "月"
+        }
+      ]
+    },
+    {
+      "type": "title",
+      "title": "爪が伸びるくらい",
+      "subtitle": "でも、確かに距離が変わる",
+      "narration": "まるで爪が伸びるほどの速さ。",
+      "duration": 4
+    },
+    {
+      "type": "diagram",
+      "title": "レーザーで測る",
+      "narration": "月の反射板にレーザーを当て、戻る時間を測ります。",
+      "duration": 7,
+      "shapes": [
+        {
+          "shape": "circle",
+          "x": 230,
+          "y": 950,
+          "size": 270,
+          "color": "#398cda",
+          "label": "地球"
+        },
+        {
+          "shape": "rectangle",
+          "x": 540,
+          "y": 950,
+          "size": 230,
+          "color": "#ffdc78",
+          "label": "光の往復"
+        },
+        {
+          "shape": "circle",
+          "x": 830,
+          "y": 950,
+          "size": 190,
+          "color": "#c3c9d6",
+          "label": "月"
+        }
+      ]
+    },
+    {
+      "type": "diagram",
+      "title": "潮の満ち引きが鍵",
+      "narration": "原因は、潮の満ち引きに関わる重力の働き。",
+      "duration": 5,
+      "shapes": [
+        {
+          "shape": "circle",
+          "x": 290,
+          "y": 965,
+          "size": 355,
+          "color": "#398cda",
+          "label": "地球"
+        },
+        {
+          "shape": "circle",
+          "x": 800,
+          "y": 900,
+          "size": 200,
+          "color": "#c3c9d6",
+          "label": "月"
+        }
+      ]
+    },
+    {
+      "type": "title",
+      "title": "月は、今も遠ざかる",
+      "subtitle": "長い時間をかけて、少しずつ",
+      "narration": "空の月は、今日も少しずつ遠ざかっています。",
+      "duration": 5
+    }
+  ]
+}

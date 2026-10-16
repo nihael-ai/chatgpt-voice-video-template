@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "topic": "月は地球から年平均約3.8cm遠ざかる（30秒雑学）",
+  "stage": "awaiting_review",
+  "revision_count": 0,
+  "max_auto_revisions": 2,
+  "awaiting_user_decision": false,
+  "approval_reference": null,
+  "evidence": "projects/moon-distance-30/state_preview.png",
+  "history": [
+    {
+      "action": "init",
+      "stage": "brief",
+      "at": "2026-10-16T07:00:00+00:00"
+    },
+    {
+      "action": "storyboard",
+      "from": "brief",
+      "stage": "storyboard",
+      "at": "2026-10-16T07:00:00+00:00",
+      "file": "projects/moon-distance-30/storyboard.md"
+    },
+    {
+      "action": "preview",
+      "from": "storyboard",
+      "stage": "preview",
+      "at": "2026-10-16T07:00:00+00:00",
+      "file": "projects/moon-distance-30/state_preview.png"
+    },
+    {
+      "action": "request-review",
+      "from": "preview",
+      "stage": "awaiting_review",
+      "at": "2026-10-16T07:00:00+00:00"
+    }
+  ]
+}
