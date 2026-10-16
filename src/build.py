@@ -81,7 +81,7 @@ def main() -> int:
         fit = scene.get("fit", "contain")
         scale = f"scale={width}:{height}:force_original_aspect_ratio={'increase' if fit == 'cover' else 'decrease'}"
         crop_pad = f",crop={width}:{height}" if fit == "cover" else f",pad={width}:{height}:(ow-iw)/2:(oh-ih)/2:color={data['video'].get('background', '#10182b')}"
-        cmd += ["-t", f"{duration:.3f}", "-vf", scale + crop_pad + ",format=yuv420p", "-r", str(fps), "-c:v", "libx264", "-c:a", "aac", "-shortest", str(segment)]
+        cmd += ["-t", f"{duration:.3f}", "-vf", scale + crop_pad + ",format=yuv420p", "-af", "apad", "-r", str(fps), "-c:v", "libx264", "-c:a", "aac", str(segment)]
         run(*cmd)
         concat_lines.append(f"file '{segment.as_posix()}'")
         subtitles.append((cursor, cursor + duration, scene["narration"]))
@@ -116,4 +116,5 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
 
