@@ -1,0 +1,73 @@
+name: Compare visual engines (single small PR experiment)
+on:
+  pull_request:
+    branches: [feature/video-quality-v2]
+    paths:
+      - "experiments/engine-compare/**"
+      - ".github/workflows/engine-compare.yml"
+permissions:
+  contents: read
+concurrency:
+  group: visual-benchmark-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+jobs:
+  compare:
+    if: github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'feature/engine-comparison'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install CPU-only tools and Japanese fonts
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg fonts-noto-cjk
+          python -m pip install --quiet Pillow==11.3.0
+      - name: Python video (no speech)
+        run: |
+          mkdir -p build/engine-compare
+          /usr/bin/time -f "%e" -o build/engine-compare/python_seconds.txt python experiments/engine-compare/python/render.py --spec experiments/engine-compare/spec.json --output build/engine-compare/python.mp4
+      - name: Remotion dependencies and types
+        working-directory: experiments/engine-compare/remotion
+        run: |
+          npm install --no-audit --no-fund
+          npm run typecheck
+      - name: Remotion video (same spec, no speech)
+        working-directory: experiments/engine-compare/remotion
+        run: |
+          /usr/bin/time -f "%e" -o ../../../build/engine-compare/remotion_seconds.txt npx --no-install remotion render src/index.ts Demo ../../../build/engine-compare/remotion.mp4 --codec=h264 --crf=23 --concurrency=1
+      - name: Verify video properties and save metrics
+        run: |
+          python - <<'PY'
+          import json,subprocess,pathlib
+          folder=pathlib.Path('build/engine-compare')
+          out={}
+          for engine in ('python','remotion'):
+              mp4=folder/f'{engine}.mp4'
+              data=json.loads(subprocess.check_output(['ffprobe','-v','error','-show_entries','stream=width,height,avg_frame_rate,codec_name:format=duration,size','-of','json',str(mp4)]))
+              stream=data['streams'][0]
+              assert stream['width']==640 and stream['height']==360,stream
+              assert stream['avg_frame_rate']=='15/1',stream
+              assert abs(float(data['format']['duration'])-12)<0.1,data['format']
+              out[engine]={'render_seconds':float((folder/f'{engine}_seconds.txt').read_text()),'bytes':mp4.stat().st_size,'duration':float(data['format']['duration'])}
+          (folder/'metrics.json').write_text(json.dumps(out,indent=2))
+          print(json.dumps(out,indent=2))
+          PY
+      - name: Upload short comparison only
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: engine-compare-${{ github.run_number }}
+          path: |
+            build/engine-compare/*.mp4
+            build/engine-compare/metrics.json
+            build/engine-compare/*_seconds.txt
+          if-no-files-found: warn
+          retention-days: 1
