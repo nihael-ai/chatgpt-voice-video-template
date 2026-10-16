@@ -7,13 +7,14 @@ import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 MAX_REVISIONS = 2
 NEXT = {
     "brief": {"storyboard": "storyboard"},
-    "storyboard": {"preview": "preview"},
-    "preview": {"request-review": "awaiting_review"},
-    "awaiting_review": {"changes": "revision_requested", "approve": "approved"},
+    "storyboard": {"preview": "preview_generated"},
+    "preview_generated": {"present": "preview_presented"},
+    "preview_presented": {"request-review": "awaiting_feedback"},
+    "awaiting_feedback": {"changes": "revision_requested", "approve": "approved"},
     "revision_requested": {"storyboard": "storyboard"},
     "approved": {"rendered": "rendered"},
     "rendered": {"delivered": "delivered"},
@@ -64,7 +65,7 @@ def init(project: str | Path, topic: str) -> dict:
         "version": SCHEMA_VERSION, "topic": topic.strip(), "stage": "brief",
         "revision_count": 0, "max_auto_revisions": MAX_REVISIONS,
         "awaiting_user_decision": False, "approval_reference": None,
-        "evidence": None, "history": [{"action": "init", "stage": "brief", "at": now()}],
+        "presentation_reference": None, "evidence": None, "history": [{"action": "init", "stage": "brief", "at": now()}],
     }
     save(project, state)
     return state
@@ -78,7 +79,18 @@ def load(project: str | Path) -> dict:
         data = json.loads(path.read_text(encoding="utf8"))
     except (UnicodeError, ValueError) as error:
         raise StateError(f"Invalid state JSON: {error}") from error
-    if data.get("version") != SCHEMA_VERSION or data.get("stage") not in NEXT or not isinstance(data.get("history"), list):
+    if not isinstance(data.get("history"), list):
+        raise StateError("Malformed state history")
+    # Safe migration from v1: never assume an old 'awaiting_review' meant the
+    # image was actually shown inside the conversation. Ask to present again.
+    if data.get("version") == 1:
+        before = data.get("stage")
+        if before in {"preview", "awaiting_review"}:
+            data["stage"] = "preview_generated"
+        data["version"] = SCHEMA_VERSION
+        data["presentation_reference"] = None
+        data["history"].append({"action": "migrate-v1", "from": before, "stage": data["stage"], "at": now()})
+    if data.get("version") != SCHEMA_VERSION or data.get("stage") not in NEXT:
         raise StateError("Unsupported or malformed state")
     return data
 
@@ -103,10 +115,16 @@ def advance(project: str | Path, action: str, *, evidence: str = "", message: st
     dest = NEXT[old].get(action)
     if dest is None:
         raise StateError(f"{action} is not allowed from {old}")
-    if action in ("changes", "approve", "delivered") and not message.strip():
+    if action in ("changes", "approve", "delivered", "present") and not message.strip():
         raise StateError(f"{action} requires --message")
     if action == "approve" and not message.startswith("user:"):
         raise StateError("Approval note must begin with user: and quote an explicit user decision")
+    if action == "present":
+        if not message.startswith("chat:") or len(message.strip()) <= len("chat:"):
+            raise StateError("Present requires --message 'chat:<actual inline display reference>'")
+        prior = data.get("evidence")
+        if not prior or not (project_dir(project).parent.parent / prior).is_file():
+            raise StateError("Preview image evidence is missing; regenerate before presenting")
     if action == "storyboard" and data.get("awaiting_user_decision"):
         raise StateError("Autonomous revision limit exceeded: ask user how to proceed")
     evidence_ref = file_evidence(project, evidence, FORMATS[action]) if action in FORMATS else None
@@ -117,6 +135,12 @@ def advance(project: str | Path, action: str, *, evidence: str = "", message: st
     elif action == "approve":
         data["approval_reference"] = message.strip()
         data["awaiting_user_decision"] = False
+    elif action == "present":
+        # A record of an actually displayed image, not an authentication token.
+        # Only write after the host surfaced the media to the user.
+        data["presentation_reference"] = message.strip()
+    if action in ("storyboard", "preview"):
+        data["presentation_reference"] = None
     if action == "storyboard":
         data["evidence"] = None  # old preview invalid once storyboard changes
     if evidence_ref:
@@ -138,8 +162,9 @@ def guidance(state: dict) -> str:
     return {
         "brief": "Create a script and detailed storyboard. Do not render a video.",
         "storyboard": "Check layout and create cheap still preview without TTS/MP4.",
-        "preview": "Self-review and present the preview; request user feedback.",
-        "awaiting_review": "WAIT for user response. Log changes or explicit approval; never approve yourself.",
+        "preview_generated": "Load the actual image into this chat. Do not mark presented until the host displays it; if unsupported, provide a fallback and remain in preview_generated.",
+        "preview_presented": "After confirming inline image delivery, request-review and ask the user for feedback.",
+        "awaiting_feedback": "WAIT for user response. Log changes or explicit approval; never approve yourself.",
         "revision_requested": "Revise storyboard, regenerate cheap preview, and ask user again.",
         "approved": "Use separately authorized manual rendering route; log verified MP4 only.",
         "rendered": "Check finished video, share a usable download link, then log delivery.",

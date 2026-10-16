@@ -4,6 +4,10 @@ ChatGPTやCodexに原稿・素材・指示を渡し、`project.json` を更新�
 
 生成時に有料AI APIは呼びません。VOICEVOX Engine、Python、FFmpeg、GitHub Actionsの標準runnerだけを使います。ただしGitHub Actionsにはアカウント／リポジトリ種別ごとの無料枠があり、超過時の課金設定は利用者のGitHub設定に依存します。
 
+## チャット内でプレビューを確認する（新しい試作）
+
+`python -m src.chat_preview projects/demo/project.json --output build/chat-preview/demo`で、一覧画像とシーン画像および `preview_manifest.json` を生成します。このコマンドはVOICEVOX/FFmpegを起動しません。ChatGPT/Workなどで動かす場合、**画像を実際の返答に添付して表示するのはエージェント側の責任**です。GitHubへの保存だけでは画面に表示されません。詳細は[チャット内プレビュー表示の実装契約](docs/INLINE_PREVIEW.md)。
+
 ## チャットから制作を進める（video-director 試作）
 
 動画を作成・再開する際には、[video-director Skill](.agents/skills/video-director/SKILL.md)と[会話型制作の進行手順](docs/CHAT_VIDEO_WORKFLOW.md)を使用できます。制作状態を `projects/<name>/production_state.json` に保存し、台本 → 絵コンテ → 静止画プレビュー → ユーザー確認 → 明示承認 → MP4 の順序で進めます。

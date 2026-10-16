@@ -23,8 +23,10 @@ AIはprojects/my-video/storyboard.mdに絵コンテを書きます。
 
 ~~~bash
 python -m src.production_state advance projects/my-video storyboard --evidence storyboard.md
-python -m src.storyboard projects/my-video/project.json --output build/storyboard
-python -m src.production_state advance projects/my-video preview --evidence ../../build/storyboard/contact-sheet.jpg
+python -m src.chat_preview projects/my-video/project.json --output build/chat-preview/my-video
+python -m src.production_state advance projects/my-video preview --evidence ../../build/chat-preview/my-video/contact-sheet.jpg
+# ChatGPTが実際の画像を会話内に表示できたと確認できた場合のみ：
+python -m src.production_state advance projects/my-video present --message "chat:実際に表示したメッセージの参照"
 python -m src.production_state advance projects/my-video request-review
 ~~~
 
@@ -45,3 +47,7 @@ python -m src.production_state advance projects/my-video approve --message "user
 まず台本・コンテ・静止画。明示承認なしにフル動画やVOICEVOXの長時間生成を実行しない。同じ問題の自律修正を2回までに制限。無料API・ソフトウェアを使い、外部有料サービスと権利未確認の素材を使わない。GitHubではmainへの無断マージを避ける。
 
 本試作ではChatGPTから新規動画の完全自動納品までの動作はまだ検証していません。
+
+## チャット表示の最重要条件
+
+実際の表示工程は `docs/INLINE_PREVIEW.md` を参照。GitHub Actionsやリポジトリ単体から会話内へ画像を挿入することはできません。画像がまだユーザーに表示されていない場合は`preview_generated`に留めてください。
